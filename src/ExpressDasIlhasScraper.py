@@ -33,11 +33,11 @@ class ExpressDasIlhasScraper(BaseScraper):
                 content = Selector(text=resp.text)
                 await self.parse_article(url, content)
 
-            load_more_btn = html.css("#loadMore").get()
-            if load_more_btn is not None:
-                # retrieve last_value from the html page and build data argument for POST request
-                pattern = re.compile(r"let last = '([^']*)'")
-                match = pattern.search(resp.text)
+            # retrieve last_value from the html page and build data argument for POST request
+            pattern = re.compile(r"let last = '([^']*)'")
+            match = pattern.search(resp.text)
+
+            if match is not None:
                 last_value = match.group(1)
 
                 data = {

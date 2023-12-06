@@ -28,6 +28,26 @@ class BaseScraper:
                 await asyncio.sleep(2**retries)  # Exponential backoff
         raise RuntimeError(f"Failed to fetch page after {max_retries} retries.")
 
+    async def send_post_request(self, endpoint, data):
+        url = f"{self.base_url}/{endpoint}"
+
+        async with AsyncClient() as client:
+            try:
+                response = await client.post(url, data=data)
+
+                # Check if the request was successful (status code 2xx)
+                if response.status_code // 100 == 2:
+                    print(f"POST request to {url} successful!")
+                    print("Response:", response.text)
+                    return response.text  # Return the response data
+                else:
+                    print(f"POST request to {url} failed with status code {response.status_code}")
+                    print("Response:", response.text)
+                    return None
+            except RequestError as e:
+                print(f"An error occurred during the POST request to {url}: {e}")
+                return None
+
     async def parse_page(self, client, page_url):
         raise NotImplementedError("Subclasses must implement the parse_page method.")
 

@@ -86,6 +86,18 @@ async def main():
         "/editorial",
         "/outros-mundos",
         "/sociedade",
+        "/ambiente",
+        "/boas-novas",
+        "/colunista",
+        "/desporto",
+        "/elas",
+        "/entrelinhas",
+        "/entrevista",
+        "/estaticos",
+        "/ponto-de-vista",
+        "/publireportagem",
+        "/regioes",
+        "/tecnologia",
     ]
 
     # Create an async multiprocessing Queue for inter-process communication

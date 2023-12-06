@@ -39,9 +39,11 @@ class BaseScraper:
                 if response.status_code // 100 == 2:
                     print(f"POST request to {url} successful!")
                     print("Response:", response.text)
-                    return response.text  # Return the response data
+                    return response  # Return the response data
                 else:
-                    print(f"POST request to {url} failed with status code {response.status_code}")
+                    print(
+                        f"POST request to {url} failed with status code {response.status_code}"
+                    )
                     print("Response:", response.text)
                     return None
             except RequestError as e:

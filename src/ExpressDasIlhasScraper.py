@@ -29,43 +29,38 @@ class ExpressDasIlhasScraper(BaseScraper):
 
             for url in urls:
                 url = f"https://expressodasilhas.cv{url}"
-                resp = await self.fetch_page(client, url)
-                content = Selector(text=resp.text)
+                page = await self.fetch_page(client, url)
+                content = Selector(text=page.text)
                 await self.parse_article(url, content)
 
-            # retrieve last_value from the html page and build data argument for POST request
+            # retrieve last_value from the html text and build data argument for POST request
             pattern = re.compile(r"let last = '([^']*)'")
             match = pattern.search(resp.text)
 
             if match is not None:
                 last_value = match.group(1)
 
-                data = {
+                form_data = {
                     "listType": "section",
                     "slug": page_url.rsplit("/", 1)[-1],
                     "before": last_value,
                 }
                 endpoint = "api/lists/section"
-                resp = await self.send_post_request(endpoint, data)
+                response = await self.send_post_request(endpoint, form_data)
+                payload = response.json()
+                await self.parse_json(payload)
 
-                while True:
-                    payload = resp.json()
-
-                    await self.parse_json(payload)
-
+                while 'last' in payload:
                     # Update the before and slug for argument
-                    data["before"] = payload.get("last")
-                    data["slug"] = payload.get("list")[0].get("slug").split("/")[0]
+                    form_data["before"] = payload.get("last")
+                    form_data["slug"] = payload.get("list")[0].get("slug").split("/")[0]
 
                     # Send another post request
-                    res = await self.send_post_request(endpoint, data)
-
-                    if res is not None:
-                        await self.parse_json(res.json())
-                    else:
-                        break
+                    res = await self.send_post_request(endpoint, form_data)
+                    payload = res.json()
+                    await self.parse_json(payload)                    
             else:
-                console.print(f"No next page found on [blue]{page_url}[/blue]")
+                console.print(f"No Load More button found on [orange]{page_url}[/orange]")
 
         except Exception as e:
             console.print(f"[red]Error parsing page {page_url}[/red]: {e}")

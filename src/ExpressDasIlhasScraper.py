@@ -71,8 +71,8 @@ class ExpressDasIlhasScraper(BaseScraper):
             console.print(f"[red]Error parsing page {page_url}[/red]: {e}")
 
     async def parse_json(self, payload):
-        for article_dict in payload.get("list"):
-            async with AsyncClient() as client:
+        async with AsyncClient() as client:
+            for article_dict in payload.get("list"):
                 link = f"{self.base_url}/{article_dict.get('slug')}"
                 res = await self.fetch_page(client, link)
                 sel = Selector(text=res.text)

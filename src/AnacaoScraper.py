@@ -78,7 +78,7 @@ async def main():
         "/categoria/desporto/",
         "/categoria/mundo/",
         "/categoria/diaspora/",
-        "/categoria/opiniao/"
+        "/categoria/opiniao/",
     ]
 
     # Create an async multiprocessing Queue for inter-process communication

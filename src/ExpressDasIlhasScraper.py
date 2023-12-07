@@ -50,7 +50,7 @@ class ExpressDasIlhasScraper(BaseScraper):
                 payload = response.json()
                 await self.parse_json(payload)
 
-                while 'last' in payload:
+                while "last" in payload:
                     # Update the before and slug for argument
                     form_data["before"] = payload.get("last")
                     form_data["slug"] = payload.get("list")[0].get("slug").split("/")[0]
@@ -58,9 +58,11 @@ class ExpressDasIlhasScraper(BaseScraper):
                     # Send another post request
                     res = await self.send_post_request(endpoint, form_data)
                     payload = res.json()
-                    await self.parse_json(payload)                    
+                    await self.parse_json(payload)
             else:
-                console.print(f"No Load More button found on [orange]{page_url}[/orange]")
+                console.print(
+                    f"No Load More button found on [yellow]{page_url}[/yellow]"
+                )
 
         except Exception as e:
             console.print(f"[red]Error parsing page {page_url}[/red]: {e}")

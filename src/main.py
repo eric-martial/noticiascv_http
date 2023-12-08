@@ -1,12 +1,12 @@
 import asyncio
 
-from .AnacaoScraper import main as AnacaoMain
-from .ExpressDasIlhasScraper import main as ExpressoDasIlhasMain
-from .SantiagoMagazineScraper import main as SantiagoMagazineMain
+from .anacao_scraper import main as anacao_main
+from .expresso_das_ilhas_scraper import main as expressodasilhas_main
+from .santiagomagazine_scraper import main as santiagomagazine_main
 
 
 async def main():
-    await asyncio.gather(AnacaoMain(), SantiagoMagazineMain(), ExpressoDasIlhasMain())
+    await asyncio.gather(anacao_main(), santiagomagazine_main(), expressodasilhas_main())
 
 
 if __name__ == "__main__":

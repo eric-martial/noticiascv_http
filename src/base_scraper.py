@@ -57,7 +57,7 @@ class BaseScraper:
                 if e.response.status_code == 502:
                     retries += 1
                     ScraperLogger.log_warning(
-                        f"502 Bad Gateway. Retrying... ({retries}/{max_retries})"
+                        f"{page_url} \n 502 Bad Gateway. Retrying... ({retries}/{max_retries})"
                     )
                     await asyncio.sleep(2**retries)  # Exponential backoff
                 else:
@@ -66,11 +66,11 @@ class BaseScraper:
             except RequestError as e:
                 retries += 1
                 ScraperLogger.log_warning(
-                    f"Request failed. Retrying... ({retries}/{max_retries})"
+                    f"{page_url} \n  Request failed. Retrying... ({retries}/{max_retries})"
                 )
                 await asyncio.sleep(2**retries)  # Exponential backoff
 
-        ScraperLogger.log_error(f"Failed to fetch page after {max_retries} retries.")
+        ScraperLogger.log_error(f"Failed to fetch page {page_url} after {max_retries} retries.")
 
     async def send_post_request(self, endpoint, data):
         url = f"{self.base_url}/{endpoint}"

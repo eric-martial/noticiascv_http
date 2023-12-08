@@ -82,7 +82,7 @@ class BaseScraper:
                 # Check if the request was successful (status code 2xx)
                 if response.status_code // 100 == 2:
                     ScraperLogger.log_info(
-                        f"POST request to {url} successful! Response: {response.text}"
+                        f"POST request to {url} successful!"
                     )
                     return response  # Return the response data
                 else:

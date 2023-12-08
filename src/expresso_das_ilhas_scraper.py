@@ -2,31 +2,27 @@ import asyncio
 import html as hypertext
 import re
 import traceback
-
 import dateparser
 from httpx import AsyncClient
 from parsel import Selector
-from rich.console import Console
-
 from .base_scraper import BaseScraper
 from .storage_worker import StorageWorker
 from .utils import normalize_date
+from .scraper_logger import ScraperLogger  # Import ScraperLogger
 
 traceback.print_exc()
 
 SENTINEL = "STOP"
 
-console = Console()
-
-
 class ExpressDasIlhasScraper(BaseScraper):
     async def parse_page(self, client, page_url):
         try:
+            ScraperLogger.log_info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
             urls = html.css(".featuredContent > a.intern::attr(href)").getall()
 
-            console.print(
+            ScraperLogger.log_info(
                 f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
             )
 
@@ -36,7 +32,6 @@ class ExpressDasIlhasScraper(BaseScraper):
                 content = Selector(text=page.text)
                 await self.parse_article(url, content)
 
-            # retrieve last_value from the html text and build data argument for POST request
             pattern = re.compile(r"let last = '([^']*)'")
             match = pattern.search(resp.text)
 
@@ -54,21 +49,19 @@ class ExpressDasIlhasScraper(BaseScraper):
                 await self.parse_json(payload)
 
                 while "last" in payload:
-                    # Update the before and slug for argument
                     form_data["before"] = payload.get("last")
                     form_data["slug"] = payload.get("list")[0].get("slug").split("/")[0]
 
-                    # Send another post request
                     res = await self.send_post_request(endpoint, form_data)
                     payload = res.json()
                     await self.parse_json(payload)
             else:
-                console.print(
+                ScraperLogger.log_info(
                     f"No Load More button found on [yellow]{page_url}[/yellow]"
                 )
 
         except Exception as e:
-            console.print(f"[red]Error parsing page {page_url}[/red]: {e}")
+            ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
 
     async def parse_json(self, payload):
         async with AsyncClient() as client:
@@ -80,6 +73,7 @@ class ExpressDasIlhasScraper(BaseScraper):
 
     async def parse_article(self, page_url, html):
         try:
+            ScraperLogger.log_info(f"Parsing article: {page_url}")
             article_block = html.css("div.row.article")
             author_datepub = article_block.css(".topSignature > p")
             author = set(author_datepub.css(".intern.author::text").getall())
@@ -110,7 +104,7 @@ class ExpressDasIlhasScraper(BaseScraper):
             await self.storage_queue.put(item)
 
         except Exception as e:
-            console.print(f"[red]Error parsing article {page_url}[/red]: {e}")
+            ScraperLogger.log_error(f"Error parsing article {page_url}: {e}")
 
 
 async def main():
@@ -138,7 +132,6 @@ async def main():
     storage_process_santiago = asyncio.create_task(storage_worker_santiago.run())
 
     # Start the scraper processes
-
     scraper_santiago = ExpressDasIlhasScraper(
         base_url="https://expressodasilhas.cv",
         start_urls=start_urls_santiago,

@@ -1,13 +1,12 @@
 import asyncio
 import html as hypertext
-
 import dateparser
 from parsel import Selector
 from rich.console import Console
-
 from .base_scraper import BaseScraper
 from .storage_worker import StorageWorker
 from .utils import normalize_date
+from .scraper_logger import ScraperLogger
 
 SENTINEL = "STOP"
 
@@ -17,6 +16,7 @@ console = Console()
 class AnacaoScraper(BaseScraper):
     async def parse_page(self, client, page_url):
         try:
+            ScraperLogger.log_info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
 
@@ -26,11 +26,12 @@ class AnacaoScraper(BaseScraper):
                 + html.css("div#archive-list-wrap li>a::attr(href)").getall()
             )
 
-            console.print(
+            ScraperLogger.log_info(
                 f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
             )
 
             for url in urls:
+                ScraperLogger.log_info(f"Parsing article: {url}")
                 resp = await self.fetch_page(client, url)
                 content = Selector(text=resp.text)
                 await self.parse_article(url, content)
@@ -40,13 +41,14 @@ class AnacaoScraper(BaseScraper):
                 next_page_url = pagination_links[-2]
                 await self.parse_page(client, next_page_url)
             else:
-                console.print(f"No next page found on [blue]{page_url}[/blue]")
+                ScraperLogger.log_info(f"No next page found on [blue]{page_url}[/blue]")
 
         except Exception as e:
-            console.print(f"[red]Error parsing page {page_url}[/red]: {e}")
+            ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
 
     async def parse_article(self, page_url, html):
         try:
+            ScraperLogger.log_info(f"Parsing article: {page_url}")
             filtered_strings = [p for p in html.css("div#content-main p").getall()]
             filtered_content = hypertext.unescape(" <br/> ".join(filtered_strings))
 
@@ -66,7 +68,7 @@ class AnacaoScraper(BaseScraper):
             await self.storage_queue.put(item)
 
         except Exception as e:
-            console.print(f"[red]Error parsing article {page_url}[/red]: {e}")
+            ScraperLogger.log_error(f"Error parsing article {page_url}: {e}")
 
 
 async def main():

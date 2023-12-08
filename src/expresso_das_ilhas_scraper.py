@@ -1,15 +1,18 @@
 import asyncio
 import html as hypertext
 import re
+import traceback
 
 import dateparser
 from httpx import AsyncClient
 from parsel import Selector
 from rich.console import Console
 
-from .BaseScraper import BaseScraper
-from .StorageWorker import StorageWorker
+from .base_scraper import BaseScraper
+from .storage_worker import StorageWorker
 from .utils import normalize_date
+
+traceback.print_exc()
 
 SENTINEL = "STOP"
 

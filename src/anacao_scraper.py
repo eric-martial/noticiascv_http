@@ -5,8 +5,8 @@ import dateparser
 from parsel import Selector
 from rich.console import Console
 
-from .BaseScraper import BaseScraper
-from .StorageWorker import StorageWorker
+from .base_scraper import BaseScraper
+from .storage_worker import StorageWorker
 from .utils import normalize_date
 
 SENTINEL = "STOP"

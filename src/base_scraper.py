@@ -102,10 +102,6 @@ class BaseScraper:
     async def parse_article(self, page_url, html):
         raise NotImplementedError("Subclasses must implement the parse_article method.")
 
-    def get_random_proxy(self):
-        # Add logic to return a random proxy from your list
-        return random.choice(self.proxies)
-
     async def run(self):
         async with AsyncClient(proxies=self.proxies) as client:
             for start_url in self.start_urls:

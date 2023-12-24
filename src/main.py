@@ -6,7 +6,7 @@ from .santiagomagazine_scraper import main as santiagomagazine_main
 
 
 async def main():
-    await asyncio.gather(anacao_main(), santiagomagazine_main(), expressodasilhas_main())
+    await asyncio.gather(anacao_main(), santiagomagazine_main())
 
 
 if __name__ == "__main__":

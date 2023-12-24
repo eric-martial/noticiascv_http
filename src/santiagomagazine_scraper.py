@@ -1,17 +1,32 @@
 import asyncio
 import html as hypertext
+import aiosqlite
 import dateparser
 from parsel import Selector
 from .base_scraper import BaseScraper
 from .storage_worker import StorageWorker
 from .utils import normalize_date
-from .scraper_logger import ScraperLogger  # Import ScraperLogger
+from .scraper_logger import ScraperLogger
+from icecream import ic
 
 SENTINEL = "STOP"
 
 class SantiagoMagazineScraper(BaseScraper):
+    def __init__(self, base_url, start_urls, storage_queue, database_path):
+        super().__init__(base_url, start_urls, storage_queue, database_path)
+        self.processed_urls = set()
+
+    async def load_processed_urls(self):
+        async with aiosqlite.connect(self.database_path) as conn:
+            cursor = await conn.cursor()
+            await cursor.execute("SELECT link FROM articles where source = 'santiagomagazine'")
+            rows = await cursor.fetchall()
+            self.processed_urls = set(row[0] for row in rows)
+            
     async def parse_page(self, client, page_url):
         try:
+            await self.load_processed_urls()
+            
             ScraperLogger.log_info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
@@ -23,9 +38,14 @@ class SantiagoMagazineScraper(BaseScraper):
 
             for url in urls:
                 url = f"https://santiagomagazine.cv{url}"
-                resp = await self.fetch_page(client, url)
-                content = Selector(text=resp.text)
-                await self.parse_article(url, content)
+
+                if url not in self.processed_urls:
+                    resp = await self.fetch_page(client, url)
+                    content = Selector(text=resp.text)
+                    await self.parse_article(url, content)
+                    self.processed_urls.add(url)
+                else:
+                    ScraperLogger.log_info(f"Skipped existing article: {url}")
 
             next_page_url = (
                 "https://santiagomagazine.cv"

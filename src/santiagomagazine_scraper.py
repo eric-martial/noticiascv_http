@@ -45,19 +45,16 @@ class SantiagoMagazineScraper(BaseScraper):
                     await self.parse_article(url, content)
                     self.processed_urls.add(url)
                 else:
-                    ScraperLogger.log_info(f"Skipped existing article: {url}")
+                    ScraperLogger.log_info(f"Skipped existing URL: {url}")
 
-            next_page_url = (
-                "https://santiagomagazine.cv"
-                + html.css(
-                    "div.pagination-btn-wrapper li.page-item a::attr(href)"
-                ).extract()[-1]
-            )
-            if next_page_url is not None:
+            next_page_link = html.css("li.page-item.active + li.page-item a::attr(href)").get()
+            next_page_url = f"https://santiagomagazine.cv{next_page_link}" if next_page_link else None
+
+            if next_page_url is not None and next_page_url != page_url:
                 await self.parse_page(client, next_page_url)
             else:
                 ScraperLogger.log_info(f"No next page found on [blue]{page_url}[/blue]")
-
+        
         except Exception as e:
             ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
 

@@ -1,14 +1,16 @@
 import asyncio
 import html as hypertext
+
 import aiosqlite
 import dateparser
+from icecream import ic
 from parsel import Selector
 from rich.console import Console
+
 from .base_scraper import BaseScraper
+from .scraper_logger import ScraperLogger
 from .storage_worker import StorageWorker
 from .utils import normalize_date
-from .scraper_logger import ScraperLogger
-from icecream import ic
 
 SENTINEL = "STOP"
 
@@ -26,11 +28,11 @@ class AnacaoScraper(BaseScraper):
             await cursor.execute("SELECT link FROM articles where source = 'anacao'")
             rows = await cursor.fetchall()
             self.processed_urls = set(row[0] for row in rows)
-    
+
     async def parse_page(self, client, page_url):
         try:
             await self.load_processed_urls()
-            
+
             ScraperLogger.log_info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)

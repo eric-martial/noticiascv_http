@@ -70,7 +70,9 @@ class BaseScraper:
                 )
                 await asyncio.sleep(2**retries)  # Exponential backoff
 
-        ScraperLogger.log_error(f"Failed to fetch page {page_url} after {max_retries} retries.")
+        ScraperLogger.log_error(
+            f"Failed to fetch page {page_url} after {max_retries} retries."
+        )
 
     async def send_post_request(self, endpoint, data):
         url = f"{self.base_url}/{endpoint}"
@@ -81,9 +83,7 @@ class BaseScraper:
 
                 # Check if the request was successful (status code 2xx)
                 if response.status_code // 100 == 2:
-                    ScraperLogger.log_info(
-                        f"POST request to {url} successful!"
-                    )
+                    ScraperLogger.log_info(f"POST request to {url} successful!")
                     return response  # Return the response data
                 else:
                     ScraperLogger.log_warning(

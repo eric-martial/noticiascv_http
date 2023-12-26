@@ -2,6 +2,7 @@ import asyncio
 import html as hypertext
 import re
 import traceback
+import aiosqlite
 import dateparser
 from httpx import AsyncClient
 from parsel import Selector
@@ -15,8 +16,21 @@ traceback.print_exc()
 SENTINEL = "STOP"
 
 class ExpressDasIlhasScraper(BaseScraper):
+    def __init__(self, base_url, start_urls, storage_queue, database_path):
+        super().__init__(base_url, start_urls, storage_queue, database_path)
+        self.processed_urls = set()
+     
+    async def load_processed_urls(self):
+        async with aiosqlite.connect(self.database_path) as conn:
+            cursor = await conn.cursor()
+            await cursor.execute("SELECT link FROM articles where source = 'expressodasilhas'")
+            rows = await cursor.fetchall()
+            self.processed_urls = set(row[0] for row in rows)
+
     async def parse_page(self, client, page_url):
         try:
+            await self.load_processed_urls()
+            
             ScraperLogger.log_info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
@@ -28,9 +42,18 @@ class ExpressDasIlhasScraper(BaseScraper):
 
             for url in urls:
                 url = f"https://expressodasilhas.cv{url}"
-                page = await self.fetch_page(client, url)
+
+                if url not in self.processed_urls:
+                    page = await self.fetch_page(client, url)
+                    content = Selector(text=page.text)
+                    await self.parse_article(url, content)
+                    self.processed_urls.add(url)
+                else:
+                    ScraperLogger.log_info(f"Skipped existing URL: {url}")
+
+                """page = await self.fetch_page(client, url)
                 content = Selector(text=page.text)
-                await self.parse_article(url, content)
+                await self.parse_article(url, content)"""
 
             pattern = re.compile(r"let last = '([^']*)'")
             match = pattern.search(resp.text)
@@ -64,12 +87,19 @@ class ExpressDasIlhasScraper(BaseScraper):
             ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
 
     async def parse_json(self, payload):
+        await self.load_processed_urls()
+        
         async with AsyncClient() as client:
+            
             for article_dict in payload.get("list"):
                 link = f"{self.base_url}/{article_dict.get('slug')}"
-                res = await self.fetch_page(client, link)
-                sel = Selector(text=res.text)
-                await self.parse_article(link, sel)
+                
+                if link not in self.processed_urls:
+                    res = await self.fetch_page(client, link)
+                    sel = Selector(text=res.text)
+                    await self.parse_article(link, sel)
+                else:
+                    ScraperLogger.log_info(f"Skipped existing URL: {link}")
 
     async def parse_article(self, page_url, html):
         try:

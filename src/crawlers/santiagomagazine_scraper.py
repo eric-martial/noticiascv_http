@@ -6,10 +6,10 @@ import dateparser
 from icecream import ic
 from parsel import Selector
 
-from .base_scraper import BaseScraper
-from .scraper_logger import ScraperLogger
-from .storage_worker import StorageWorker
-from .utils import normalize_date
+from ..base_scraper import BaseScraper
+from ..scraper_logger import ScraperLogger
+from ..storage_worker import StorageWorker
+from ..utils import normalize_date
 
 SENTINEL = "STOP"
 

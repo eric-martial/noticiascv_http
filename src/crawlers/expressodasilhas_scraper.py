@@ -8,10 +8,10 @@ import dateparser
 from httpx import AsyncClient
 from parsel import Selector
 
-from .base_scraper import BaseScraper
-from .scraper_logger import ScraperLogger
-from .storage_worker import StorageWorker
-from .utils import normalize_date
+from ..base_scraper import BaseScraper
+from ..scraper_logger import ScraperLogger
+from ..storage_worker import StorageWorker
+from ..utils import normalize_date
 
 traceback.print_exc()
 
@@ -125,7 +125,9 @@ class ExpressDasIlhasScraper(BaseScraper):
                 "topic": article_block.css(".antetitle > a::text").get(),
                 "text_html": hypertext.unescape(
                     " <br/> ".join(
-                        article_block.css(".content > .summary + .articleText").getall()
+                        article_block.css(
+                            ".content > .summary + .articleText::text"
+                        ).getall()
                     )
                 ),
             }

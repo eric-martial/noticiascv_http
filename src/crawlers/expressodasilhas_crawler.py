@@ -126,7 +126,7 @@ class ExpressDasIlhasScraper(BaseScraper):
                 "text_html": hypertext.unescape(
                     " <br/> ".join(
                         article_block.css(
-                            ".content > .summary + .articleText::text"
+                            ".content > .summary + div.articleText *::text"
                         ).getall()
                     )
                 ),

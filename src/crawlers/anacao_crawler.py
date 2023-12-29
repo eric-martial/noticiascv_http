@@ -71,7 +71,11 @@ class AnacaoScraper(BaseScraper):
         try:
             ScraperLogger.log_info(f"Parsing article: {page_url}")
             filtered_strings = [p for p in html.css("div#content-main p").getall()]
-            filtered_content = hypertext.unescape(" <br/> ".join(filtered_strings))
+            filtered_content = hypertext.unescape(
+                " <br/> ".join(filtered_strings)
+            ) + hypertext.unescape(
+                " <br/> ".join(html.css('div#content-main div[dir="auto"] *::text').getall())
+            )
 
             item = {
                 "source": "anacao",

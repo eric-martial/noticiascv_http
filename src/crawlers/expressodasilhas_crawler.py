@@ -108,6 +108,10 @@ class ExpressDasIlhasScraper(BaseScraper):
             author_datepub = article_block.css(".topSignature > p")
             author = set(author_datepub.css(".intern.author::text").getall())
             author = ", ".join(map(str, author))
+            article_css_selector = """
+                div.content  p::text,
+                div.summary::text
+            """
 
             item = {
                 "source": "expressodasilhas",
@@ -124,11 +128,7 @@ class ExpressDasIlhasScraper(BaseScraper):
                 "link": page_url,
                 "topic": article_block.css(".antetitle > a::text").get(),
                 "text_html": hypertext.unescape(
-                    " <br/> ".join(
-                        article_block.css(
-                            ".content > .summary + div.articleText *::text"
-                        ).getall()
-                    )
+                    " <br/> ".join(article_block.css(article_css_selector).getall())
                 ),
             }
 

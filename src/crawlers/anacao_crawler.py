@@ -70,12 +70,11 @@ class AnacaoScraper(BaseScraper):
     async def parse_article(self, page_url, html):
         try:
             ScraperLogger.log_info(f"Parsing article: {page_url}")
-            filtered_strings = [p for p in html.css("div#content-main p").getall()]
-            filtered_content = hypertext.unescape(
-                " <br/> ".join(filtered_strings)
-            ) + hypertext.unescape(
-                " <br/> ".join(html.css('div#content-main div[dir="auto"] *::text').getall())
-            )
+            article_css_selector = """
+                div#content-main p,
+                div[dir="auto"] *::text,
+                div.news-details-layout1 p *::text    
+            """
 
             item = {
                 "source": "anacao",
@@ -86,7 +85,7 @@ class AnacaoScraper(BaseScraper):
                 ),
                 "link": page_url,
                 "topic": html.css("header#post-header span::text").get(),
-                "text_html": filtered_content,
+                "text_html": " <br/> ".join(html.css(article_css_selector).getall()),
             }
 
             # Put the item into the storage queue

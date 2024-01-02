@@ -71,9 +71,11 @@ class AnacaoScraper(BaseScraper):
         try:
             ScraperLogger.log_info(f"Parsing article: {page_url}")
             article_css_selector = """
-                div#content-main p,
+                div#content-main p::text,
                 div[dir="auto"] *::text,
-                div.news-details-layout1 p *::text    
+                div.news-details-layout1 p *::text,
+                div#content-main div[style="text-align: justify;"] *::text,
+                div#content-main div::text
             """
 
             item = {

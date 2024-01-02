@@ -109,8 +109,9 @@ class ExpressDasIlhasScraper(BaseScraper):
             author = set(author_datepub.css(".intern.author::text").getall())
             author = ", ".join(map(str, author))
             article_css_selector = """
-                div.content  p::text,
-                div.summary::text
+                div.content p::text,
+                div.summary::text,
+                div.articleText *::text
             """
 
             item = {
@@ -140,7 +141,7 @@ class ExpressDasIlhasScraper(BaseScraper):
 
 
 async def main():
-    start_urls_santiago = [
+    start_urls_xdi = [
         "/politica",
         "/economia",
         "/pais",
@@ -154,33 +155,33 @@ async def main():
     ]
 
     # Create an async multiprocessing Queue for inter-process communication
-    storage_queue_santiago = asyncio.Queue()
+    storage_queue_xdi = asyncio.Queue()
 
     # Start the storage worker processes
-    storage_worker_santiago = StorageWorker(
-        storage_queue_santiago, "scraper_database.db"
+    storage_worker_xdi = StorageWorker(
+        storage_queue_xdi, "scraper_database.db"
     )
 
-    storage_process_santiago = asyncio.create_task(storage_worker_santiago.run())
+    storage_process_xdi = asyncio.create_task(storage_worker_xdi.run())
 
     # Start the scraper processes
-    scraper_santiago = ExpressDasIlhasScraper(
+    scraper_xdi = ExpressDasIlhasScraper(
         base_url="https://expressodasilhas.cv",
-        start_urls=start_urls_santiago,
-        storage_queue=storage_queue_santiago,
+        start_urls=start_urls_xdi,
+        storage_queue=storage_queue_xdi,
         database_path="scraper_database.db",
     )
 
-    scraper_process_santiago = asyncio.create_task(scraper_santiago.run())
+    scraper_process_xdi = asyncio.create_task(scraper_xdi.run())
 
     # Wait for the scraper processes to finish
-    await asyncio.gather(scraper_process_santiago)
+    await asyncio.gather(scraper_process_xdi)
 
     # Signal the storage workers to exit
-    await storage_queue_santiago.put(SENTINEL)
+    await storage_queue_xdi.put(SENTINEL)
 
     # Wait for the storage worker processes to finish
-    await storage_process_santiago
+    await storage_process_xdi
 
 
 if __name__ == "__main__":

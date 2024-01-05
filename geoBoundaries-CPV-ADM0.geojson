@@ -2,7 +2,11 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+        "name": "Cabo Verde",
+        "code": "CV",
+        "group": "Countries"
+      },
       "geometry": {
         "coordinates": [
           [

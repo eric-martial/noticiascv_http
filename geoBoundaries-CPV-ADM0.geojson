@@ -4,7 +4,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Sal"
       },
       "geometry": {
@@ -72,7 +71,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Boa Vista"
       },
       "geometry": {
@@ -564,7 +562,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "São Nicolau"
       },
       "geometry": {
@@ -1288,7 +1285,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Maio"
       },
       "geometry": {
@@ -1544,7 +1540,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Santiago"
       },
       "geometry": {
@@ -2012,7 +2007,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Fogo"
       },
       "geometry": {
@@ -2144,7 +2138,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Brava"
       },
       "geometry": {
@@ -2292,7 +2285,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "São Vicente"
       },
       "geometry": {
@@ -2676,7 +2668,6 @@
     {
       "type": "Feature",
       "properties": {
-        "Country": "CV",
         "Region": "Santo Antão"
       },
       "geometry": {

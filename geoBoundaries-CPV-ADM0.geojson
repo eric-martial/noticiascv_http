@@ -4,7 +4,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Sal"
+        "Country": "CV",
+        "Region": "Sal"
       },
       "geometry": {
         "coordinates": [
@@ -71,7 +72,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Boa Vista"
+        "Country": "CV",
+        "Region": "Boa Vista"
       },
       "geometry": {
         "coordinates": [
@@ -562,7 +564,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "São Nicolau"
+        "Country": "CV",
+        "Region": "São Nicolau"
       },
       "geometry": {
         "coordinates": [
@@ -1285,7 +1288,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Maio"
+        "Country": "CV",
+        "Region": "Maio"
       },
       "geometry": {
         "coordinates": [
@@ -1540,7 +1544,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Santiago"
+        "Country": "CV",
+        "Region": "Santiago"
       },
       "geometry": {
         "coordinates": [
@@ -2007,7 +2012,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Fogo"
+        "Country": "CV",
+        "Region": "Fogo"
       },
       "geometry": {
         "coordinates": [
@@ -2138,7 +2144,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Brava"
+        "Country": "CV",
+        "Region": "Brava"
       },
       "geometry": {
         "coordinates": [
@@ -2285,7 +2292,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "São Vicente"
+        "Country": "CV",
+        "Region": "São Vicente"
       },
       "geometry": {
         "coordinates": [
@@ -2668,7 +2676,8 @@
     {
       "type": "Feature",
       "properties": {
-        "Island": "Santo Antão"
+        "Country": "CV",
+        "Region": "Santo Antão"
       },
       "geometry": {
         "coordinates": [

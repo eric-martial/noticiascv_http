@@ -111,7 +111,8 @@ class ExpressDasIlhasScraper(BaseScraper):
             article_css_selector = """
                 div.content p::text,
                 div.summary::text,
-                div.articleText *::text
+                div.articleText *::text,
+                div.content div[style="text-align: justify;"] *::text
             """
 
             item = {

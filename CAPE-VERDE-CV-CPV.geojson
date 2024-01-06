@@ -3,6 +3,7 @@
   "features": [
     {
       "type": "Feature",
+      "id": "Boa Vista",
       "properties": {
         "name": "Boa Vista"
       },
@@ -494,6 +495,7 @@
     },
     {
       "type": "Feature",
+      "id": "São Nicolau",
       "properties": {
         "name": "São Nicolau"
       },
@@ -1217,6 +1219,7 @@
     },
     {
       "type": "Feature",
+      "id": "Maio",
       "properties": {
         "name": "Maio"
       },
@@ -1472,6 +1475,7 @@
     },
     {
       "type": "Feature",
+      "id": "Santiago",
       "properties": {
         "name": "Santiago"
       },
@@ -1939,6 +1943,7 @@
     },
     {
       "type": "Feature",
+      "id": "Fogo",
       "properties": {
         "name": "Fogo"
       },
@@ -2070,6 +2075,7 @@
     },
     {
       "type": "Feature",
+      "id": "Brava",
       "properties": {
         "name": "Brava"
       },
@@ -2217,6 +2223,7 @@
     },
     {
       "type": "Feature",
+      "id": "são vicente",
       "properties": {
         "name": "São Vicente"
       },
@@ -2600,6 +2607,7 @@
     },
     {
       "type": "Feature",
+      "id": "Santo Antão",
       "properties": {
         "name": "Santo Antão"
       },
@@ -2823,6 +2831,7 @@
     },
     {
       "type": "Feature",
+      "id": "Sal",
       "properties": {
         "name": "Sal"
       },

@@ -490,7 +490,7 @@
                         16.231164601008402
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -1214,7 +1214,7 @@
                         16.479042202477302
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -1470,7 +1470,7 @@
                         15.119230880524341
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -1938,7 +1938,7 @@
                         15.041244586055925
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -2070,7 +2070,7 @@
                         14.989924278384777
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -2218,7 +2218,7 @@
                         14.877869765013784
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -2602,7 +2602,7 @@
                         16.897496983758856
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -2826,7 +2826,7 @@
                         16.983315979386504
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         },
         {
@@ -3694,7 +3694,7 @@
                         16.745324270950604
                     ]
                 ],
-                "type": "LineString"
+                "type": "Polygon"
             }
         }
     ]

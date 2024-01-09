@@ -98,7 +98,7 @@ class AnacaoScraper(BaseScraper):
 
 
 async def main():
-    start_urls_anacao = [
+    start_urls_anacao = (
         "/categoria/sociedade/",
         "/categoria/politica/",
         "/categoria/cultura/",
@@ -107,7 +107,7 @@ async def main():
         "/categoria/mundo/",
         "/categoria/diaspora/",
         "/categoria/opiniao/",
-    ]
+    )
 
     # Create an async multiprocessing Queue for inter-process communication
     storage_queue_anacao = asyncio.Queue()

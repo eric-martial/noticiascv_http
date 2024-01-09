@@ -103,7 +103,7 @@ class SantiagoMagazineScraper(BaseScraper):
 
 
 async def main():
-    start_urls_santiago = [
+    start_urls_santiago = (
         "/economia",
         "/politica",
         "/cultura",
@@ -123,7 +123,7 @@ async def main():
         "/publireportagem",
         "/regioes",
         "/tecnologia",
-    ]
+    )
 
     # Create an async multiprocessing Queue for inter-process communication
     storage_queue_santiago = asyncio.Queue()

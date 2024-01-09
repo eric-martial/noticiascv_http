@@ -75,7 +75,6 @@ class ExpressDasIlhasScraper(BaseScraper):
                 while "last" in payload:
                     form_data["before"] = payload.get("last")
                     form_data["slug"] = payload.get("list")[0].get("slug").split("/")[0]
-
                     res = await self.send_post_request(endpoint, form_data)
                     payload = res.json()
                     await self.parse_json(payload)
@@ -142,7 +141,7 @@ class ExpressDasIlhasScraper(BaseScraper):
 
 
 async def main():
-    start_urls_xdi = [
+    start_urls_xdi = (
         "/politica",
         "/economia",
         "/pais",
@@ -153,7 +152,7 @@ async def main():
         "/eitec",
         "/lifestyle",
         "/opiniao",
-    ]
+    )
 
     # Create an async multiprocessing Queue for inter-process communication
     storage_queue_xdi = asyncio.Queue()

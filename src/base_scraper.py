@@ -65,7 +65,7 @@ class BaseScraper:
             "http://": "http://193.239.58.92:8081",
             "http://": "http://102.214.106.86:1975",
             "http://": "http://115.42.45.1:80",
-            "http://": "http://77.119.250.129:8080"
+            "http://": "http://77.119.250.129:8080",
         }
 
     async def fetch_page(self, client, page_url, max_retries=5):
@@ -86,7 +86,6 @@ class BaseScraper:
                     )
                     await asyncio.sleep(2**retries)  # Exponential backoff
                 else:
-                    # If it's not a 502 status, re-raise the exception
                     raise
             except RequestError as e:
                 retries += 1

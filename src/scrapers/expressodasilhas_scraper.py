@@ -158,9 +158,7 @@ async def main():
     storage_queue_xdi = asyncio.Queue()
 
     # Start the storage worker processes
-    storage_worker_xdi = StorageWorker(
-        storage_queue_xdi, "scraper_database.db"
-    )
+    storage_worker_xdi = StorageWorker(storage_queue_xdi, "scraper_database.db")
 
     storage_process_xdi = asyncio.create_task(storage_worker_xdi.run())
 

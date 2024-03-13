@@ -21,11 +21,14 @@ class AnacaoScraper(BaseScraper):
     def __init__(self, base_url, start_urls, storage_queue, database_path):
         super().__init__(base_url, start_urls, storage_queue, database_path)
         self.processed_urls = set()
+        self.source = "anacao"
 
     async def load_processed_urls(self):
         async with aiosqlite.connect(self.database_path) as conn:
             cursor = await conn.cursor()
-            await cursor.execute("SELECT link FROM articles where source = 'anacao'")
+            await cursor.execute(
+                f"SELECT link FROM articles where source = '{self.source}'"
+            )
             rows = await cursor.fetchall()
             self.processed_urls = set(row[0] for row in rows)
 
@@ -79,7 +82,7 @@ class AnacaoScraper(BaseScraper):
             """
 
             item = {
-                "source": "anacao",
+                "source": self.source,
                 "title": html.css("header#post-header h1::text").get(),
                 "author": html.css("header#post-header span.author-name a::text").get(),
                 "date_pub": normalize_date(

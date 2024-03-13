@@ -5,3 +5,4 @@ httpx
 parsel
 dateparser
 icecream
+fake_useragent

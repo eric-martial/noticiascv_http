@@ -4,3 +4,5 @@ Websites currently scraped are:
 - [Anacao](https://www.anacao.cv/)
 - [Santiagmagazine](https://santiagomagazine.cv/)
 - [ExpressoDasIlhas](https://expressodasilhas.cv/)
+
+Run by doing ```python -m src.main```

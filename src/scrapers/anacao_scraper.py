@@ -42,7 +42,7 @@ class AnacaoScraper(BaseScraper):
             )
 
             logger.info(
-                f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
+                f"Found {len(urls)} URLs on page {page_url}"
             )
 
             for url in urls:

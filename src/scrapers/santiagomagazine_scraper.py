@@ -3,11 +3,10 @@ import html as hypertext
 
 import aiosqlite
 import dateparser
-from icecream import ic
+from loguru import logger
 from parsel import Selector
 
 from ..base_scraper import BaseScraper
-from ..scraper_logger import ScraperLogger
 from ..storage_worker import StorageWorker
 from ..utils import normalize_date
 
@@ -32,12 +31,12 @@ class SantiagoMagazineScraper(BaseScraper):
         try:
             await self.load_processed_urls()
 
-            ScraperLogger.log_info(f"Parsing page: {page_url}")
+            logger.info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
             urls = html.css("h3.title-semibold-dark a::attr(href)").getall()
 
-            ScraperLogger.log_info(
+            logger.info(
                 f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
             )
 
@@ -50,7 +49,7 @@ class SantiagoMagazineScraper(BaseScraper):
                     await self.parse_article(url, content)
                     self.processed_urls.add(url)
                 else:
-                    ScraperLogger.log_info(f"Skipped existing URL: {url}")
+                    logger.info(f"Skipped existing URL: {url}")
 
             next_page_link = html.css(
                 "li.page-item.active + li.page-item a::attr(href)"
@@ -64,14 +63,14 @@ class SantiagoMagazineScraper(BaseScraper):
             if next_page_url is not None and next_page_url != page_url:
                 await self.parse_page(client, next_page_url)
             else:
-                ScraperLogger.log_info(f"No next page found on [blue]{page_url}[/blue]")
+                logger.info(f"No next page found on [blue]{page_url}[/blue]")
 
         except Exception as e:
-            ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
+            logger.error(f"Error parsing page {page_url}: {e}")
 
     async def parse_article(self, page_url, html):
         try:
-            ScraperLogger.log_info(f"Parsing article: {page_url}")
+            logger.info(f"Parsing article: {page_url}")
             article_block = html.css("div.news-details-layout1")
             article_publication = html.css(
                 "div.news-details-layout1 ul.post-info-dark>li>a::text"
@@ -99,7 +98,7 @@ class SantiagoMagazineScraper(BaseScraper):
             await self.storage_queue.put(item)
 
         except Exception as e:
-            ScraperLogger.log_error(f"Error parsing article {page_url}: {e}")
+            logger.error(f"Error parsing article {page_url}: {e}")
 
 
 async def main():

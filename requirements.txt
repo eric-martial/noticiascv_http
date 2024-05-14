@@ -6,3 +6,4 @@ parsel
 dateparser
 icecream
 fake_useragent
+loguru

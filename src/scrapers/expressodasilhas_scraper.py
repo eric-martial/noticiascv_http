@@ -1,19 +1,16 @@
 import asyncio
 import html as hypertext
 import re
-import traceback
 
 import aiosqlite
 import dateparser
 from httpx import AsyncClient
+from loguru import logger
 from parsel import Selector
 
 from ..base_scraper import BaseScraper
-from ..scraper_logger import ScraperLogger
 from ..storage_worker import StorageWorker
 from ..utils import normalize_date
-
-traceback.print_exc()
 
 SENTINEL = "STOP"
 
@@ -36,12 +33,12 @@ class ExpressDasIlhasScraper(BaseScraper):
         try:
             await self.load_processed_urls()
 
-            ScraperLogger.log_info(f"Parsing page: {page_url}")
+            logger.info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
             urls = html.css(".featuredContent > a.intern::attr(href)").getall()
 
-            ScraperLogger.log_info(
+            logger.info(
                 f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
             )
 
@@ -54,7 +51,7 @@ class ExpressDasIlhasScraper(BaseScraper):
                     await self.parse_article(url, content)
                     self.processed_urls.add(url)
                 else:
-                    ScraperLogger.log_info(f"Skipped existing URL: {url}")
+                    logger.info(f"Skipped existing URL: {url}")
 
             pattern = re.compile(r"let last = '([^']*)'")
             match = pattern.search(resp.text)
@@ -79,12 +76,10 @@ class ExpressDasIlhasScraper(BaseScraper):
                     payload = res.json()
                     await self.parse_json(payload)
             else:
-                ScraperLogger.log_info(
-                    f"No Load More button found on [yellow]{page_url}[/yellow]"
-                )
+                logger.info(f"No Load More button found on [yellow]{page_url}[/yellow]")
 
         except Exception as e:
-            ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
+            logger.error(f"Error parsing page {page_url}: {e}")
 
     async def parse_json(self, payload):
         await self.load_processed_urls()
@@ -98,11 +93,11 @@ class ExpressDasIlhasScraper(BaseScraper):
                     sel = Selector(text=res.text)
                     await self.parse_article(link, sel)
                 else:
-                    ScraperLogger.log_info(f"Skipped existing URL: {link}")
+                    logger.info(f"Skipped existing URL: {link}")
 
     async def parse_article(self, page_url, html):
         try:
-            ScraperLogger.log_info(f"Parsing article: {page_url}")
+            logger.info(f"Parsing article: {page_url}")
             article_block = html.css("div.row.article")
             author_datepub = article_block.css(".topSignature > p")
             author = set(author_datepub.css(".intern.author::text").getall())
@@ -137,7 +132,7 @@ class ExpressDasIlhasScraper(BaseScraper):
             await self.storage_queue.put(item)
 
         except Exception as e:
-            ScraperLogger.log_error(f"Error parsing article {page_url}: {e}")
+            logger.error(f"Error parsing article {page_url}: {e}")
 
 
 async def main():

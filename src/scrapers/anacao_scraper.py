@@ -1,20 +1,15 @@
 import asyncio
-import html as hypertext
 
 import aiosqlite
 import dateparser
-from icecream import ic
+from loguru import logger
 from parsel import Selector
-from rich.console import Console
 
 from ..base_scraper import BaseScraper
-from ..scraper_logger import ScraperLogger
 from ..storage_worker import StorageWorker
 from ..utils import normalize_date
 
 SENTINEL = "STOP"
-
-console = Console()
 
 
 class AnacaoScraper(BaseScraper):
@@ -36,7 +31,7 @@ class AnacaoScraper(BaseScraper):
         try:
             await self.load_processed_urls()
 
-            ScraperLogger.log_info(f"Parsing page: {page_url}")
+            logger.info(f"Parsing page: {page_url}")
             resp = await self.fetch_page(client, page_url)
             html = Selector(text=resp.text)
 
@@ -46,33 +41,33 @@ class AnacaoScraper(BaseScraper):
                 + html.css("div#archive-list-wrap li>a::attr(href)").getall()
             )
 
-            ScraperLogger.log_info(
+            logger.info(
                 f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
             )
 
             for url in urls:
                 if url not in self.processed_urls:
-                    ScraperLogger.log_info(f"Parsing article: {url}")
+                    logger.info(f"Parsing article: {url}")
                     resp = await self.fetch_page(client, url)
                     content = Selector(text=resp.text)
                     await self.parse_article(url, content)
                     self.processed_urls.add(url)
                 else:
-                    ScraperLogger.log_info(f"Skipped existing article: {url}")
+                    logger.info(f"Skipped existing article: {url}")
 
             pagination_links = html.css("div.pagination a::attr(href)").getall()
             if pagination_links:
                 next_page_url = pagination_links[-2]
                 await self.parse_page(client, next_page_url)
             else:
-                ScraperLogger.log_info(f"No next page found on [blue]{page_url}[/blue]")
+                logger.info(f"No next page found on [blue]{page_url}[/blue]")
 
         except Exception as e:
-            ScraperLogger.log_error(f"Error parsing page {page_url}: {e}")
+            logger.error(f"Error parsing page {page_url}: {e}")
 
     async def parse_article(self, page_url, html):
         try:
-            ScraperLogger.log_info(f"Parsing article: {page_url}")
+            logger.info(f"Parsing article: {page_url}")
             article_css_selector = """
                 div#content-main p::text,
                 div[dir="auto"] *::text,
@@ -97,7 +92,7 @@ class AnacaoScraper(BaseScraper):
             await self.storage_queue.put(item)
 
         except Exception as e:
-            ScraperLogger.log_error(f"Error parsing article {page_url}: {e}")
+            logger.error(f"Error parsing article {page_url}: {e}")
 
 
 async def main():

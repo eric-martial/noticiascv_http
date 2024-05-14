@@ -1,6 +1,8 @@
 import logging
 import os
 
+from loguru import logger
+
 from rich.console import Console
 
 log_folder = "runtime"
@@ -16,8 +18,8 @@ formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 file_handler.setFormatter(formatter)
 
 # Add the file handler to the logger
-logger = logging.getLogger(__name__)
-logger.addHandler(file_handler)
+# logger = logging.getLogger(__name__)
+# logger.addHandler(file_handler)
 
 
 class ScraperLogger:
@@ -26,14 +28,14 @@ class ScraperLogger:
     @staticmethod
     def log_info(message):
         logger.info(message)
-        ScraperLogger.console.print(f"[green]INFO:[/green] {message}")
+        # ScraperLogger.console.print(f"[green]INFO:[/green] {message}")
 
     @staticmethod
     def log_warning(message):
         logger.warning(message)
-        ScraperLogger.console.print(f"[yellow]WARNING:[/yellow] {message}")
+        # ScraperLogger.console.print(f"[yellow]WARNING:[/yellow] {message}")
 
     @staticmethod
     def log_error(message):
         logger.error(message)
-        ScraperLogger.console.print(f"[red]ERROR:[/red] {message}")
+        # ScraperLogger.console.print(f"[red]ERROR:[/red] {message}")

@@ -39,7 +39,7 @@ class ExpressDasIlhasScraper(BaseScraper):
             urls = html.css(".featuredContent > a.intern::attr(href)").getall()
 
             logger.info(
-                f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
+                f"Found {len(urls)} URLs on page {page_url}"
             )
 
             for url in urls:
@@ -76,7 +76,7 @@ class ExpressDasIlhasScraper(BaseScraper):
                     payload = res.json()
                     await self.parse_json(payload)
             else:
-                logger.info(f"No Load More button found on [yellow]{page_url}[/yellow]")
+                logger.info(f"No Load More button found on {page_url}")
 
         except Exception as e:
             logger.error(f"Error parsing page {page_url}: {e}")

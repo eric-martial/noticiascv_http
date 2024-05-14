@@ -37,7 +37,7 @@ class SantiagoMagazineScraper(BaseScraper):
             urls = html.css("h3.title-semibold-dark a::attr(href)").getall()
 
             logger.info(
-                f"Found [cyan]{len(urls)}[/cyan] URLs on page [blue]{page_url}[/blue]"
+                f"Found {len(urls)} URLs on page {page_url}"
             )
 
             for url in urls:
@@ -63,7 +63,7 @@ class SantiagoMagazineScraper(BaseScraper):
             if next_page_url is not None and next_page_url != page_url:
                 await self.parse_page(client, next_page_url)
             else:
-                logger.info(f"No next page found on [blue]{page_url}[/blue]")
+                logger.info(f"No next page found on {page_url}")
 
         except Exception as e:
             logger.error(f"Error parsing page {page_url}: {e}")
